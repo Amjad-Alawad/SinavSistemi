@@ -1,0 +1,32 @@
+﻿@model List<IGrouping<string, Soru>>
+
+<h2>Sınav Soruları</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning">
+        Bu sınava ait soru bulunamadı
+    </div>
+}
+else
+{
+    @foreach (var grup in Model)
+    {
+        <h4>@grup.Key</h4>
+
+        <table class="table table-bordered">
+            <tr>
+                <th>Soru</th>
+                <th>Cevap</th>
+            </tr>
+
+            @foreach (var item in grup)
+            {
+                <tr>
+                    <td>@item.SoruMetni</td>
+                    <td>@item.DogruCevap</td>
+                </tr>
+            }
+        </table>
+    }
+}

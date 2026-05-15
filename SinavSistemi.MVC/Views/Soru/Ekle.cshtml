@@ -1,0 +1,84 @@
+﻿@model SinavSistemi.MVC.Models.CreateSoruDto
+
+@{
+    var dersler = ViewBag.Dersler as List<SinavSistemi.MVC.Models.DersVM>;
+    var sinavlar = ViewBag.Sinavlar as List<SinavSistemi.MVC.Models.SinavVM>;
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4"> Yeni Soru Ekle</h2>
+
+    <form asp-action="Ekle" method="post" class="card p-4 shadow">
+
+      
+        <div class="mb-3">
+            <label class="form-label">Sınav Seç</label>
+            <select asp-for="SinavId" class="form-control" required>
+                <option value="">-- Sınav Seç --</option>
+
+                @if (sinavlar != null)
+                {
+                    foreach (var s in sinavlar)
+                    {
+                        <option value="@s.SinavId">
+                            @s.DersAdi - @s.SinavTarihi
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Ders Seç</label>
+            <select asp-for="DersId" class="form-control" required>
+                <option value="">-- Ders Seç --</option>
+
+                @if (dersler != null)
+                {
+                    foreach (var d in dersler)
+                    {
+                        <option value="@d.DersId">
+                            @d.DersAdi
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Soru</label>
+            <textarea asp-for="SoruMetni" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <input asp-for="SecenekA" class="form-control" placeholder="A Şıkkı" />
+            </div>
+
+            <div class="col-md-6 mb-2">
+                <input asp-for="SecenekB" class="form-control" placeholder="B Şıkkı" />
+            </div>
+
+            <div class="col-md-6 mb-2">
+                <input asp-for="SecenekC" class="form-control" placeholder="C Şıkkı" />
+            </div>
+
+            <div class="col-md-6 mb-2">
+                <input asp-for="SecenekD" class="form-control" placeholder="D Şıkkı" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Doğru Cevap</label>
+            <input asp-for="DogruCevap" class="form-control" maxlength="1" />
+        </div>
+
+        <button class="btn btn-success w-100">
+            Kaydet
+        </button>
+
+    </form>
+
+</div>

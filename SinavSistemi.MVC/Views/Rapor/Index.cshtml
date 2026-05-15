@@ -1,0 +1,30 @@
+﻿@model List<HocaVM>
+@{
+    ViewData["Title"] = "Raporlar";
+}
+
+<h4 class="fw-bold mb-4"><i class="bi bi-graph-up me-2"></i>Raporlar</h4>
+
+<div class="card" style="max-width:500px">
+    <div class="card-header bg-white fw-semibold">
+        <i class="bi bi-person-badge me-2"></i>Hocaya Göre Sınav Raporu
+    </div>
+    <div class="card-body">
+        <p class="text-muted">Hoca seçerek o hocanın tüm sınavlarını ve öğrenci sayılarını görün.</p>
+        <form method="get" action="@Url.Action("HocaRaporu", "Rapor")">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Hoca Seçin</label>
+                <select name="hocaId" class="form-select" required>
+                    <option value="">-- Hoca Seçin --</option>
+                    @foreach (var h in Model)
+                    {
+                        <option value="@h.HocaId">@h.Ad @h.Soyad</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-search me-1"></i>Raporu Göster
+            </button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,129 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Sınav Raporu";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a href="@Url.Action("Index", "Sinavlar")" class="btn btn-outline-secondary me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-bar-chart me-2"></i>@Model.dersAdi — Sınav Raporu
+    </h4>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <div class="text-muted small">Toplam Öğrenci</div>
+            <div class="fw-bold fs-4 text-primary">@Model.toplamOgrenci</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <div class="text-muted small">Ortalama</div>
+            <div class="fw-bold fs-4 text-info">@Model.ortalama.ToString("F1")</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <div class="text-muted small">En Yüksek</div>
+            <div class="fw-bold fs-4 text-success">@Model.enYuksek</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <div class="text-muted small">En Düşük</div>
+            <div class="fw-bold fs-4 text-danger">@Model.enDusuk</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <!-- Pasta Grafik -->
+    <div class="col-md-5">
+        <div class="card p-4">
+            <h6 class="fw-bold mb-3">Geçme / Kalma Dağılımı</h6>
+            <canvas id="pastaDilimi" height="200"></canvas>
+            <div class="d-flex justify-content-center gap-4 mt-3">
+                <span><span class="badge bg-success me-1">●</span>Geçti: @Model.gecenSayisi</span>
+                <span><span class="badge bg-danger me-1">●</span>Kaldı: @Model.kalanSayisi</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Öğrenci Listesi -->
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header bg-white fw-semibold">
+                <i class="bi bi-people me-2"></i>Öğrenci Sonuçları
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Öğrenci No</th>
+                            <th>Ad Soyad</th>
+                            <th>Not</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var o in Model.ogrenciler)
+                        {
+                            <tr>
+                                <td><span class="badge bg-dark">@o.ogrenciNo</span></td>
+                                <td>@o.ogrenciAdi</td>
+                                <td>
+                                    @if (o.notu != null)
+                                    {
+                                        <span class="badge @(o.notu >= 50 ? "bg-success" : "bg-danger")">
+                                            @o.notu
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Girilmedi</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (o.notu == null)
+                                    {
+                                        <span class="badge bg-warning text-dark">Bekliyor</span>
+                                    }
+                                    else if (o.notu >= 50)
+                                    {
+                                        <span class="badge bg-success">Geçti</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Kaldı</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    new Chart(document.getElementById('pastaDilimi'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Geçti', 'Kaldı'],
+            datasets: [{
+                data: [@Model.gecenSayisi, @Model.kalanSayisi],
+                backgroundColor: ['#198754', '#dc3545'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            cutout: '65%'
+        }
+    });
+</script>

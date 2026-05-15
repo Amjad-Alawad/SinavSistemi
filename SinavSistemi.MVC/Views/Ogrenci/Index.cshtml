@@ -1,0 +1,116 @@
+﻿@model List<OgrenciSinaviVM>
+@{
+    ViewData["Title"] = "Sınavlarım";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <title>Öğrenci Paneli - Sınav Sistemi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body { background-color: #f4f6f9; }
+        .topbar { background: linear-gradient(135deg,#1e2a38,#0d6efd); color:white; padding:15px 30px; }
+        .sinav-kart { border:none; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s; }
+        .sinav-kart:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div class="topbar d-flex justify-content-between align-items-center">
+    <div>
+        <i class="bi bi-mortarboard-fill me-2 fs-5"></i>
+        <strong>Sınav Sistemi</strong>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <span><i class="bi bi-person-circle me-1"></i>@ViewBag.OgrenciAdi</span>
+        <a href="@Url.Action("Cikis", "Auth")" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-box-arrow-left me-1"></i>Çıkış
+        </a>
+    </div>
+</div>
+
+<div class="container py-4">
+
+    @if (TempData["SinavSonuc"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4">
+            <i class="bi bi-trophy me-2"></i>@TempData["SinavSonuc"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Hata"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mb-4">
+            <i class="bi bi-exclamation-circle me-2"></i>@TempData["Hata"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <h5 class="fw-bold mb-4">
+        <i class="bi bi-clipboard-check me-2"></i>Sınavlarım
+    </h5>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Henüz kayıtlı olduğunuz bir sınav bulunmamaktadır.
+        </div>
+    }
+
+    <div class="row g-3">
+        @foreach (var s in Model)
+        {
+            <div class="col-md-6">
+                <div class="card sinav-kart h-100">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold mb-3">@s.DersAdi</h5>
+                        <p class="text-muted mb-1">
+                            <i class="bi bi-person me-1"></i>@s.HocaAdi
+                        </p>
+                        <p class="text-muted mb-1">
+                            <i class="bi bi-geo-alt me-1"></i>@s.SalonAdi
+                        </p>
+                        <p class="text-muted mb-3">
+                            <i class="bi bi-calendar me-1"></i>@s.SinavTarihi
+                            &nbsp;
+                            <i class="bi bi-clock me-1"></i>@s.BaslangicSaati
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            @if (s.Notu.HasValue)
+                            {
+                                <span class="badge @(s.Notu >= 50 ? "bg-success" : "bg-danger") fs-6 px-3 py-2">
+                                    <i class="bi bi-check-circle me-1"></i>Not: @s.Notu
+                                </span>
+                                <span class="text-muted small">
+                                    <i class="bi bi-lock me-1"></i>Sınav tamamlandı
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark px-3 py-2">
+                                    <i class="bi bi-hourglass me-1"></i>Henüz girilmedi
+                                </span>
+                                <a href="@Url.Action("SinavBasla", "Ogrenci", new { id = s.SinavId })"
+   class="btn btn-primary btn-sm px-3"
+   onclick="return confirm('@s.DersAdi sınavını başlatmak istiyor musunuz?')">
+    <i class="bi bi-play-circle me-1"></i>Sınava Başla
+</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

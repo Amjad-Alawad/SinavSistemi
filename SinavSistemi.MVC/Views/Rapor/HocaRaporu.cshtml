@@ -1,0 +1,53 @@
+﻿@model List<dynamic>
+@{
+    ViewData["Title"] = "Hoca Raporu";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a href="@Url.Action("Index", "Rapor")" class="btn btn-outline-secondary me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-person-badge me-2"></i>@ViewBag.HocaAdi — Sınav Raporu
+    </h4>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Ders</th>
+                    <th>Salon</th>
+                    <th>Tarih</th>
+                    <th>Başlangıç</th>
+                    <th>Bitiş</th>
+                    <th>Katılan Öğrenci</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            Bu hocaya ait sınav bulunamadı.
+                        </td>
+                    </tr>
+                }
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@r.dersAdi</td>
+                        <td>@r.salonAdi</td>
+                        <td>@r.sinavTarihi</td>
+                        <td>@r.baslangicSaati</td>
+                        <td>@r.bitisSaati</td>
+                        <td>
+                            <span class="badge bg-primary">@r.katilanOgrenciSayisi öğrenci</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
